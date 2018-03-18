@@ -2,8 +2,6 @@
 > An idea from kensuke koike
 ---
 
-### Under construction ! Maybe has some bug.
-
 From [siamagazin](http://siamagazin.com/this-guy-uses-a-hand-cranked-pasta-machine-to-duplicate-a-photo/) :
 > YouTuber Kensuke Koike demonstrated a really intelligent collage trick with a hand-cranked pasta machine and a photograph of a canine. After sending the photograph via the pasta machine, he organized the ensuing strips into a reproduction of the identical photograph.
 
