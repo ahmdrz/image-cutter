@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"sync"
 
 	"github.com/disintegration/imaging"
 )
@@ -100,17 +101,28 @@ func main() {
 	widthSize := imageSize.X / 2
 	heigthSize := imageSize.Y / 2
 
-	images := []image.Image{
-		imaging.CropAnchor(outputImage, widthSize, heigthSize, imaging.TopLeft),
-		imaging.CropAnchor(outputImage, widthSize, heigthSize, imaging.TopRight),
-		imaging.CropAnchor(outputImage, widthSize, heigthSize, imaging.BottomLeft),
-		imaging.CropAnchor(outputImage, widthSize, heigthSize, imaging.BottomRight),
+	anchors := []imaging.Anchor{
+		imaging.TopLeft,
+		imaging.TopRight,
+		imaging.BottomLeft,
+		imaging.BottomRight,
 	}
 
-	for i, image := range images {
-		err = imaging.Save(image, path.Join(outputPath, fmt.Sprintf("output-%d.jpg", i)))
-		if err != nil {
-			log.Fatalf("failed to save image: %v", err)
-		}
+	wg := &sync.WaitGroup{}
+	wg.Add(4)
+
+	for i, anchor := range anchors {
+		go saveImage(wg, outputImage, path.Join(outputPath, fmt.Sprintf("output-%d.jpg", i)), anchor, widthSize, heigthSize)
 	}
+
+	wg.Wait()
+}
+
+func saveImage(wg *sync.WaitGroup, image image.Image, out string, anchor imaging.Anchor, widthSize, heigthSize int) {
+	image = imaging.CropAnchor(image, widthSize, heigthSize, anchor)
+	err := imaging.Save(image, out)
+	if err != nil {
+		log.Printf("failed to save image: %v", err)
+	}
+	wg.Done()
 }
