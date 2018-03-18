@@ -68,8 +68,8 @@ func main() {
 	)
 	flag.StringVar(&inputPath, "input", "", "input image")
 	flag.StringVar(&outputPath, "output", "output", "output directory")
-	flag.IntVar(&slidesX, "x", 20, "number of slides as x (small values => high quality output)")
-	flag.IntVar(&slidesY, "y", 20, "number of slides as y (small values => high quality output)")
+	flag.IntVar(&slidesX, "x", 20, "number of slides as x (high values => high quality)")
+	flag.IntVar(&slidesY, "y", 20, "number of slides as y (high values => high quality)")
 	flag.Parse()
 
 	if slidesX*slidesY == 0 {
@@ -86,15 +86,10 @@ func main() {
 		log.Fatalf("failed to open image: %v", err)
 	}
 
+	// Resize image to remove unnecessary bounds.
 	imageSize := src.Bounds().Size()
-	for imageSize.X%slidesX != 0 {
-		slidesX--
-	}
-	for imageSize.Y%slidesY != 0 {
-		slidesY--
-	}
-	slidesX = imageSize.X / slidesX
-	slidesY = imageSize.Y / slidesY
+	src = imaging.Resize(src, (imageSize.X/slidesX)*slidesX, (imageSize.Y/slidesY)*slidesY, imaging.Lanczos)
+	imageSize = src.Bounds().Size()
 
 	outputImage := sliceImageV(sliceImageH(src, imageSize, slidesY), imageSize, slidesX)
 	err = imaging.Save(outputImage, path.Join(outputPath, "output.jpg"))
