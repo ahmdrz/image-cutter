@@ -1,4 +1,4 @@
-# image-breeder | Breed your images
+# image-cutter !
 > An idea from kensuke koike
 ---
 
