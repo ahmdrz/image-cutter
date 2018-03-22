@@ -14,7 +14,7 @@ From [siamagazin](http://siamagazin.com/this-guy-uses-a-hand-cranked-pasta-machi
 ### Simple idea !
 
 ```
-  go run main.go --input="<your image>" --output="<output directory>"
+  go run main.go --input="<your image>" --output="<output directory>" [-x 20] [-y 20]
 ```
 
 ---
